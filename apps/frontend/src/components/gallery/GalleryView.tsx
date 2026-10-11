@@ -1789,6 +1789,17 @@ function Lightbox({
   // Tastatur-Navigation
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      // Don't trigger shortcuts while typing in a text field
+      // (otherwise the spacebar in the comment field likes the image).
+      const t = e.target as HTMLElement | null;
+      if (
+        t &&
+        (t.tagName === "INPUT" ||
+          t.tagName === "TEXTAREA" ||
+          t.tagName === "SELECT" ||
+          t.isContentEditable)
+      )
+        return;
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowLeft" && index > 0) onNavigate(index - 1);
       else if (e.key === "ArrowRight" && index < files.length - 1)
